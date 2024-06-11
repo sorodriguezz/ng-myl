@@ -1,0 +1,69 @@
+<div class="card-container" *ngIf="!loadingCards; else loadingCardsTemplate">
+  <div class="card" *ngFor="let card of cards" (click)="selectCard(card)">
+    <img
+      [src]="
+        'https://api.myl.cl/static/cards/' +
+        card.ed_edid +
+        '/' +
+        card.edid +
+        '.png'
+      "
+      [alt]="card.slug"
+      class="card-img"
+    />
+  </div>
+</div>
+
+<ng-template #loadingCardsTemplate>
+  <div class="loading-spinner">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+</ng-template>
+
+<p-dialog
+  [(visible)]="displayModal"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [contentStyle]="{ overflow: 'auto' }"
+>
+  <ng-template pTemplate="header">
+    <h3>{{ cardDetails?.details?.name }}</h3>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div class="modal-content">
+      <div class="loading-spinner" *ngIf="loadingDetails">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+      <div *ngIf="!loadingDetails">
+        <img
+          *ngIf="selectedCard"
+          [src]="
+            'https://api.myl.cl/static/cards/' +
+            selectedCard.ed_edid +
+            '/' +
+            selectedCard.edid +
+            '.png'
+          "
+          [alt]="selectedCard.slug"
+          class="modal-card-img centered-img"
+        />
+        <div class="card-details">
+          <p><strong>Tipo:</strong> {{ cardDetails?.details?.type || "N/A" }}</p>
+          <p><strong>Coste:</strong> {{ cardDetails?.details?.cost || "N/A" }}</p>
+          <p><strong>Fuerza:</strong> {{ cardDetails?.details?.damage || "N/A" }}</p>
+          <p><strong>Raza:</strong> {{ cardDetails?.details?.race || "N/A" }}</p>
+          <p><strong>Habilidad:</strong> {{ cardDetails?.details?.ability }}</p>
+          <p><strong>Leyenda:</strong> {{ cardDetails?.details?.flavour }}</p>
+          <p>
+            <strong>Ilustrador:</strong>
+            {{ cardDetails?.illustrator?.name || "N/A" }}
+          </p>
+          <p><strong>Rareza:</strong> {{ cardDetails?.details?.rarity || "N/A" }}</p>
+          <p><strong>Visitas:</strong> {{ cardDetails?.details?.visits || "N/A" }}</p>
+          <p><strong>Edición:</strong> {{ cardDetails?.edition?.title || "N/A" }}</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
